@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hearing Aid Clinical Report Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- LEFT PANEL: INPUTS -->
+        <div class="input-panel">
+            <h2>Hearing Aid Report Generator</h2>
+            
+            <div class="form-group">
+                <label>Hospital/Department Name</label>
+                <input type="text" id="hospitalName" value="DEPARTMENT OF ENT - MILITARY HOSPITAL">
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-part="1">Part 1</button>
+                <button class="tab-btn" data-part="2">Part 2</button>
+                <button class="tab-btn" data-part="3">Part 3</button>
+                <button class="tab-btn" data-part="4">Part 4</button>
+                <button class="tab-btn" data-part="5">Part 5</button>
+            </div>
+
+            <!-- PART 1: Patient Information -->
+            <div class="input-section active" id="part1-inputs">
+                <h3>Part 1: Patient Information</h3>
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" id="patientName" placeholder="Enter patient name">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="age" placeholder="Age">
+                    </div>
+                    <div class="form-group">
+                        <label>Sex</label>
+                        <select id="sex">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Transgender">Transgender</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ECHS Card No</label>
+                    <input type="text" id="echsCardNo" placeholder="Card Number">
+                </div>
+                <div class="form-group">
+                    <label>Relation</label>
+                    <select id="relation">
+                        <option value="Self">Self</option>
+                        <option value="Father">Father</option>
+                        <option value="Mother">Mother</option>
+                        <option value="Spouse">Spouse</option>
+                        <option value="Child">Child</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Related Person Name</label>
+                    <input type="text" id="relatedName" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Related Person ECHS Card No</label>
+                    <input type="text" id="relatedCardNo" placeholder="Card Number">
+                </div>
+                <div class="form-group">
+                    <label>ECHS Polyclinic</label>
+                    <input type="text" id="echsPolyclinic" placeholder="Polyclinic City">
+                    <!-- <select id="echsPolyclinic">
+                        <option value="">Select Polyclinic</option>
+                        <option value="Jaipur, Rajasthan">Jaipur, Rajasthan</option>
+                        <option value="Delhi Cantt, Delhi">Delhi Cantt, Delhi</option>
+                        <option value="Pune, Maharashtra">Pune, Maharashtra</option>
+                        <option value="Bangalore, Karnataka">Bangalore, Karnataka</option>
+                        <option value="Chennai, Tamil Nadu">Chennai, Tamil Nadu</option>
+                        <option value="Lucknow, Uttar Pradesh">Lucknow, Uttar Pradesh</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Kolkata, West Bengal">Kolkata, West Bengal</option>
+                    </select> -->
+                </div>
+                <div class="form-group">
+                    <label>Contact No</label>
+                    <input type="tel" id="contactNo" placeholder="Contact Number">
+                </div>
+                <div class="navigation-buttons justify-end">
+                    <button type="button" class="btn-nav btn-next" data-target="2">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PART 2: Hearing Assessment -->
+            <div class="input-section" id="part2-inputs">
+                <h3>Part 2: Hearing Assessment</h3>
+                <div class="form-group">
+                    <label>Date of Hearing Test</label>
+                    <input type="date" id="hearingTestDate">
+                </div>
+                <div class="form-group">
+                    <label>Audiologist Name</label>
+                    <input type="text" id="audiologistName" placeholder="Audiologist name">
+                </div>
+                
+                <h4>Patient's Complaints</h4>
+                <div class="form-group">
+                    <label>Difficulty in conversation in normal condition</label>
+                    <select id="complaint1">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Difficulty in conversation in noisy condition</label>
+                    <select id="complaint2">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Difficulty with TV/Radio/Mobile at normal volume</label>
+                    <select id="complaint3">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <h4>Audiogram Data - Right Ear</h4>
+                <div class="audiogram-inputs">
+                    <div class="freq-input">
+                        <label>250 Hz</label>
+                        <input type="number" class="ac-right" data-freq="250" placeholder="AC (dB)">
+                        <input type="number" class="bc-right" data-freq="250" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>500 Hz</label>
+                        <input type="number" class="ac-right" data-freq="500" placeholder="AC (dB)">
+                        <input type="number" class="bc-right" data-freq="500" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>1000 Hz</label>
+                        <input type="number" class="ac-right" data-freq="1000" placeholder="AC (dB)">
+                        <input type="number" class="bc-right" data-freq="1000" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>2000 Hz</label>
+                        <input type="number" class="ac-right" data-freq="2000" placeholder="AC (dB)">
+                        <input type="number" class="bc-right" data-freq="2000" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>4000 Hz</label>
+                        <input type="number" class="ac-right" data-freq="4000" placeholder="AC (dB)">
+                        <input type="number" class="bc-right" data-freq="4000" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>8000 Hz</label>
+                        <input type="number" class="ac-right" data-freq="8000" placeholder="AC (dB)">
+                        <input type="number" class="bc-right" data-freq="8000" placeholder="BC (dB)">
+                    </div>
+                </div>
+
+                <h4>Audiogram Data - Left Ear</h4>
+                <div class="audiogram-inputs">
+                    <div class="freq-input">
+                        <label>250 Hz</label>
+                        <input type="number" class="ac-left" data-freq="250" placeholder="AC (dB)">
+                        <input type="number" class="bc-left" data-freq="250" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>500 Hz</label>
+                        <input type="number" class="ac-left" data-freq="500" placeholder="AC (dB)">
+                        <input type="number" class="bc-left" data-freq="500" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>1000 Hz</label>
+                        <input type="number" class="ac-left" data-freq="1000" placeholder="AC (dB)">
+                        <input type="number" class="bc-left" data-freq="1000" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>2000 Hz</label>
+                        <input type="number" class="ac-left" data-freq="2000" placeholder="AC (dB)">
+                        <input type="number" class="bc-left" data-freq="2000" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>4000 Hz</label>
+                        <input type="number" class="ac-left" data-freq="4000" placeholder="AC (dB)">
+                        <input type="number" class="bc-left" data-freq="4000" placeholder="BC (dB)">
+                    </div>
+                    <div class="freq-input">
+                        <label>8000 Hz</label>
+                        <input type="number" class="ac-left" data-freq="8000" placeholder="AC (dB)">
+                        <input type="number" class="bc-left" data-freq="8000" placeholder="BC (dB)">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ear(s) Affected</label>
+                    <select id="earAffected">
+                        <option value="Right Ear">Right Ear</option>
+                        <option value="Left Ear">Left Ear</option>
+                        <option value="Bilateral">Bilateral</option>
+                    </select>
+                </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn-nav btn-back" data-target="1">&larr; Back</button>
+                    <button type="button" class="btn-nav btn-next" data-target="3">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PART 3: Hearing Aid Trial -->
+            <div class="input-section" id="part3-inputs">
+                <h3>Part 3: Hearing Aid Trial</h3>
+                <div id="trials-container">
+                    <!-- Trial entries will be added dynamically -->
+                </div>
+                <button type="button" id="addTrial" class="btn-add">Add Trial Entry</button>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn-nav btn-back" data-target="2">&larr; Back</button>
+                    <button type="button" class="btn-nav btn-next" data-target="4">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PART 4: Final Selection -->
+            <div class="input-section" id="part4-inputs">
+                <h3>Part 4: Final Selection</h3>
+                <div class="form-group">
+                    <label>Selected Model</label>
+                    <input type="text" id="selectedModel" placeholder="Auto-selected based on highest satisfaction" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Selected Supplier</label>
+                    <input type="text" id="selectedSupplier" placeholder="Auto-selected" readonly>
+                </div>
+                <div class="form-group">
+                    <label>MRP of the Model (Rs)</label>
+                    <input type="number" id="mrp" placeholder="MRP">
+                </div>
+                <div class="form-group">
+                    <label>Discount Price for ECHS Patients (Rs)</label>
+                    <input type="number" id="discountPrice" placeholder="Discount price">
+                </div>
+                <div class="form-group">
+                    <label>Warranty (Years)</label>
+                    <input type="number" id="warranty" placeholder="e.g., 3">
+                </div>
+                <div class="form-group">
+                    <label>Recommendation Statement</label>
+                    <textarea id="recommendation" rows="3" placeholder="Recommendation text"></textarea>
+                </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn-nav btn-back" data-target="3">&larr; Back</button>
+                    <button type="button" class="btn-nav btn-next" data-target="5">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PART 5: Patient Consent -->
+            <div class="input-section" id="part5-inputs">
+                <h3>Part 5: Patient Consent</h3>
+                <div class="form-group">
+                    <label>Station/Location</label>
+                    <input type="text" id="station" placeholder="e.g., MH Jaipur">
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="consentDate">
+                </div>
+                <div class="form-group">
+                    <label>Doctor 1 Name</label>
+                    <input type="text" id="doctor1Name" placeholder="Doctor name">
+                </div>
+                <div class="form-group">
+                    <label>Doctor 1 Rank & Designation</label>
+                    <input type="text" id="doctor1Rank" placeholder="e.g., Lt Col Gd Spl (ENT)">
+                </div>
+                <div class="form-group">
+                    <label>Doctor 2 Name</label>
+                    <input type="text" id="doctor2Name" placeholder="Doctor name">
+                </div>
+                <div class="form-group">
+                    <label>Doctor 2 Rank & Designation</label>
+                    <input type="text" id="doctor2Rank" placeholder="e.g., Lt Col Cl Spl (ENT)">
+                </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn-nav btn-back" data-target="4">&larr; Back</button>
+                    <button id="exportPDF" class="btn-export">Generate PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: PREVIEW -->
+        <div class="preview-panel">
+            <div id="reportPreview" class="report-container">
+                <!-- HEADER -->
+                <div class="report-header">
+                    <h1 id="preview-hospitalName">DEPARTMENT OF ENT - MILITARY HOSPITAL</h1>
+                    <h2>HEARING AID TRIAL REPORT</h2>
+                </div>
+
+                <!-- PART 1: Patient Information -->
+                <div class="report-section">
+                    <div class="section-title">PART 1 - PATIENT INFORMATION</div>
+                    <table class="info-table">
+                        <tr>
+                            <td class="label">Patient Name</td>
+                            <td class="value" id="preview-patientName"><span class="placeholder">Patient Name</span></td>
+                            <td class="label">Age</td>
+                            <td class="value" id="preview-age"><span class="placeholder">Age</span> Yrs / <span id="preview-sex">Sex</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">ECHS Card No</td>
+                            <td class="value" id="preview-echsCardNo"><span class="placeholder">ECHS Card No</span></td>
+                            <td class="label">Relation</td>
+                            <td class="value" id="preview-relation"><span class="placeholder">Relation</span></td>
+                        </tr>
+                        <tr id="related-person-row">
+                            <td class="label">Name</td>
+                            <td class="value" colspan="3">
+                                <span id="preview-relatedName"><span class="placeholder">Related Person Name</span></span> 
+                                ECHS Card No - <span id="preview-relatedCardNo"><span class="placeholder">Related Card No</span></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">ECHS Polyclinic</td>
+                            <td class="value" id="preview-echsPolyclinic"><span class="placeholder">Polyclinic</span></td>
+                            <td class="label">Contact No</td>
+                            <td class="value" id="preview-contactNo"><span class="placeholder">Contact No</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- PART 2: Hearing Assessment -->
+                <div class="report-section">
+                    <div class="section-title">PART 2 - HEARING ASSESSMENT</div>
+                    <table class="info-table">
+                        <tr>
+                            <td class="label">Date of Hearing Test</td>
+                            <td class="value" colspan="3" id="preview-hearingTestDate"><span class="placeholder">Date</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Audiologist Name</td>
+                            <td class="value" colspan="3" id="preview-audiologistName"><span class="placeholder">Audiologist Name</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label" colspan="4"><strong>Patient's Complaint</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="label">(a)</td>
+                            <td class="value" colspan="3">Difficulty in conversation in normal condition - <span id="preview-complaint1">Yes/No</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">(b)</td>
+                            <td class="value" colspan="3">Difficulty in conversation in noisy condition - <span id="preview-complaint2">Yes/No</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">(c)</td>
+                            <td class="value" colspan="3">Difficulty with using TV, Radio, Mobile at normal volume - <span id="preview-complaint3">Yes/No</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Type of Hearing Loss</td>
+                            <td class="value" colspan="3">
+                                <div>(R) ear - <span id="preview-diagnosisRight"><span class="placeholder">Diagnosis Right</span></span></div>
+                                <div>(L) ear - <span id="preview-diagnosisLeft"><span class="placeholder">Diagnosis Left</span></span></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">Average Thresholds</td>
+                            <td class="value" colspan="3">
+                                <div>(R) ear - AC: <span id="preview-acRight">0</span> dB, BC: <span id="preview-bcRight">0</span> dB</div>
+                                <div>(L) ear - AC: <span id="preview-acLeft">0</span> dB, BC: <span id="preview-bcLeft">0</span> dB</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">Ear(s) Affected</td>
+                            <td class="value" colspan="3" id="preview-earAffected"><span class="placeholder">Ear(s)</span></td>
+                        </tr>
+                    </table>
+                    <!-- Audiogram Chart -->
+                    <div class="audiogram-container">
+                        <canvas id="audiogramCanvas" width="450" height="250"></canvas>
+                    </div>
+                </div>
+
+                <!-- PART 3: Hearing Aid Trial -->
+                <div class="report-section">
+                    <div class="section-title">PART 3 - HEARING AID TRIAL AND PATIENT SATISFACTION REPORT</div>
+                    <table class="trial-table">
+                        <thead>
+                            <tr>
+                                <th>S. No</th>
+                                <th>Model</th>
+                                <th>Type</th>
+                                <th>Fitting</th>
+                                <th>SDS</th>
+                                <th>Satisfaction (1-10)</th>
+                                <th>Name of Supplier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="preview-trials">
+                            <!-- Trial rows will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PART 4: Final Selection -->
+                <div class="report-section">
+                    <div class="section-title">PART 4 - FINAL SELECTION</div>
+                    <table class="info-table">
+                        <tr>
+                            <td class="label">Selected Model and Supplier</td>
+                            <td class="value">
+                                Model - <span id="preview-selectedModel"><span class="placeholder">Model</span></span>; 
+                                Supplier - <span id="preview-selectedSupplier"><span class="placeholder">Supplier</span></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">MRP of the Model</td>
+                            <td class="value">Rs <span id="preview-mrp"><span class="placeholder">MRP</span></span> (<span id="preview-mrpWords"><span class="placeholder">MRP in words</span></span>)</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Discount Price for ECHS Patients</td>
+                            <td class="value">Rs <span id="preview-discountPrice"><span class="placeholder">Discount Price</span></span> (<span id="preview-discountPriceWords"><span class="placeholder">Price in words</span></span>) <span id="preview-discountPercentage" class="discount-percentage"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Warranty</td>
+                            <td class="value">Minimum <span id="preview-warranty"><span class="placeholder">Yrs</span></span> (<span id="preview-warrantyWords"><span class="placeholder">Yrs in words</span></span>) Years warranty</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Recommendation</td>
+                            <td class="value" id="preview-recommendation"><span class="placeholder">
+                                Recommendation Statement
+                            </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- PART 5: Patient Consent -->
+                <div class="report-section">
+                    <div class="section-title">PART 5 - PATIENT CONSENT</div>
+                    <div class="consent-text">
+                        <p id="preview-consentStatement">
+                            "I, <strong><span id="preview-consent-name">Patient Name</span></strong> 
+                            (ECHS Card No <span id="preview-consent-card">Card No</span> 
+                            <span id="preview-consent-relation">r/o</span> 
+                            <span id="preview-consent-related">Related Person</span> 
+                            ECHS Card No <span id="preview-consent-relatedCard">Card No</span>), 
+                            hereby acknowledge that I have been provided with hearing aid trial and have selected 
+                            the hearing aid based on my selection preference. I understand the terms of purchase, 
+                            warranty (<span id="preview-consent-warranty">Yrs</span> years), annual retuning schedule 
+                            and home care as explained by the supplier."
+                        </p>
+                    </div>
+                    
+                    <div class="signature-section">
+                        <div class="signature-line">
+                            <p>Patient Signature: _______________________</p>
+                        </div>
+                    </div>
+
+                    <div class="doctor-section">
+                        <div class="station-info">
+                            <p>Station: <span id="preview-station"><span class="placeholder">Station</span></span></p>
+                            <p>Date: <span id="preview-consentDate"><span class="placeholder">Date</span></span></p>
+                        </div>
+                        
+                        <div class="doctors-signature">
+                            <div class="doctor-sign">
+                                <p>(<span id="preview-doctor1Name"><span class="placeholder">Doctor 1 Name</span></span>)</p>
+                                <p><span id="preview-doctor1Rank"><span class="placeholder">Rank & Designation</span></span></p>
+                            </div>
+                            <div class="doctor-sign">
+                                <p>(<span id="preview-doctor2Name"><span class="placeholder">Doctor 2 Name</span></span>)</p>
+                                <p><span id="preview-doctor2Rank"><span class="placeholder">Rank & Designation</span></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

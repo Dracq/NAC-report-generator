@@ -1,0 +1,484 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Left Panel - Input Section */
+.input-panel {
+    width: 40%;
+    background-color: #ffffff;
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 2px solid #ddd;
+}
+
+.input-panel h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.3s;
+    border-radius: 4px;
+}
+
+.tab-btn:hover {
+    background-color: #d0d7de;
+}
+
+.tab-btn.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+/* Input Sections */
+.input-section {
+    display: none;
+}
+
+.input-section.active {
+    display: block;
+}
+
+.input-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #34495e;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.input-section h4 {
+    font-size: 15px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Audiogram Inputs */
+.audiogram-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.freq-input {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.freq-input label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.freq-input input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+/* Trial Entry */
+.trial-entry {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    position: relative;
+}
+
+.trial-entry h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.btn-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.btn-remove:hover {
+    background-color: #c0392b;
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.navigation-buttons.justify-end {
+    justify-content: flex-end;
+}
+
+.btn-nav {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-nav:hover {
+    background-color: #2980b9;
+}
+
+
+/* Buttons */
+.btn-add {
+    width: 100%;
+    padding: 10px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-add:hover {
+    background-color: #229954;
+}
+
+.btn-export {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-export:hover {
+    background-color: #d35400;
+}
+
+/* Right Panel - Preview Section */
+.preview-panel {
+    width: 60%;
+    background-color: #e8e8e8;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Report Container (A4 Size) */
+.report-container {
+    width: 210mm;
+    min-height: 297mm;
+    background-color: white;
+    margin: 0 auto;
+    padding: 10mm 20mm;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Report Header */
+.report-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #2c3e50;
+    padding-bottom: 15px;
+}
+
+.report-header h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #000000;
+    font-weight: 650;
+    text-decoration: underline;
+    text-transform: uppercase;
+  
+}
+
+.report-header h2 {
+    font-size: 18px;
+    color: #34495e;
+    text-decoration: underline;
+}
+
+/* Report Sections */
+.report-section {
+    border: 2px solid #2c3e50;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #fafafa;
+    page-break-inside: avoid;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 12px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+/* Tables */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.info-table td {
+    padding: 8px;
+    border: 1px solid #999;
+    font-size: 12px;
+}
+
+.info-table .label {
+    font-weight: 600;
+    background-color: #ecf0f1;
+    width: 30%;
+}
+
+.info-table .value {
+    background-color: white;
+}
+.info-table .placeholder,
+.placeholder {
+    color: #95a5a6;
+}
+.discount-percentage {
+    font-weight: bold;
+    color: #27ae60;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+/* Trial Table */
+.trial-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.trial-table th,
+.trial-table td {
+    border: 1px solid #999;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.trial-table th {
+    background-color: #34495e;
+    color: white;
+    font-weight: 600;
+}
+
+.trial-table td {
+    background-color: white;
+}
+
+/* Audiogram Chart */
+#audiogramCanvas {
+    border: 1px solid #999;
+    background-color: white;
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+
+.audiogram-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Consent Section */
+.consent-text {
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.consent-text p {
+    text-align: justify;
+}
+
+.signature-section {
+    margin: 20px 0;
+}
+
+.signature-line p {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.doctor-section {
+    margin-top: 20px;
+}
+
+.station-info {
+    margin-bottom: 15px;
+    font-size: 12px;
+}
+
+.station-info p {
+    margin-bottom: 5px;
+}
+
+.doctors-signature {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.doctor-sign {
+    text-align: center;
+    font-size: 12px;
+}
+
+.doctor-sign p {
+    margin-bottom: 3px;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background-color: white;
+    }
+    
+    .input-panel {
+        display: none;
+    }
+    
+    .preview-panel {
+        width: 100%;
+        padding: 0;
+        background-color: white;
+    }
+    
+    .report-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 15mm;
+    }
+    
+    .report-section {
+        page-break-inside: avoid;
+    }
+
+    .page-break-before {
+        page-break-before: always;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
