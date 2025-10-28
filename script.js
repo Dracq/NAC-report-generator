@@ -29,29 +29,35 @@ function updatePreview(inputId, previewId, prefix = '', suffix = '') {
     const preview = document.getElementById(previewId);
     
     if (input && preview) {
-        const placeholder = preview.innerHTML; // Store initial placeholder content
-        input.addEventListener('input', () => {
-            if (input.value) {
+        const placeholder = preview.innerHTML;
+
+        const update = () => {
+            // Special handling for the recommendation field
+            if (inputId === 'recommendation') {
+                const hardcodedText = "Recommended technically for purchase of equipment for the patient after the final approval by ";
+                preview.textContent = hardcodedText + input.value;
+            } else if (input.value) {
                 preview.textContent = prefix + input.value + suffix;
             } else {
                 // If input is empty, restore the placeholder
                 preview.innerHTML = placeholder;
             }
-        });
+        };
+
+        input.addEventListener('input', update);
+        input.addEventListener('change', update); // Add change listener for selects
+
+        update(); // Initial call to set value on load
     }
 }
 
 // Hospital Name update
-updatePreview('hospitalName', 'preview-hospitalName');
+// updatePreview('hospitalName', 'preview-hospitalName'); // This is hardcoded in HTML now
 
-// Part 1 updates
-updatePreview('patientName', 'preview-patientName');
-updatePreview('age', 'preview-age', '', ` Yrs / <span id="preview-sex">${document.getElementById('sex').value}</span>`);
-updatePreview('sex', 'preview-sex');
-updatePreview('echsCardNo', 'preview-echsCardNo');
+// Part 1 updates - handled by specific functions or initial calls
+updatePreview('patientName', 'preview-patientName'); // Patient Name
 updatePreview('relation', 'preview-relation');
 updatePreview('relatedName', 'preview-relatedName');
-updatePreview('relatedCardNo', 'preview-relatedCardNo');
 updatePreview('echsPolyclinic', 'preview-echsPolyclinic');
 updatePreview('contactNo', 'preview-contactNo');
 
@@ -62,6 +68,7 @@ updatePreview('complaint1', 'preview-complaint1');
 updatePreview('complaint2', 'preview-complaint2');
 updatePreview('complaint3', 'preview-complaint3');
 updatePreview('earAffected', 'preview-earAffected');
+updatePreview('serviceType', 'preview-serviceType'); // For saving/loading
 
 // Part 4 updates
 updatePreview('selectedModel', 'preview-selectedModel');
@@ -69,15 +76,23 @@ updatePreview('selectedSupplier', 'preview-selectedSupplier');
 updatePreview('mrp', 'preview-mrp');
 updatePreview('discountPrice', 'preview-discountPrice');
 updatePreview('warranty', 'preview-warranty');
-updatePreview('recommendation', 'preview-recommendation');
+
+// Special setup for recommendation to handle appending text
+const recommendationInput = document.getElementById('recommendation');
+updatePreview(recommendationInput.id, 'preview-recommendation');
 
 // Part 5 updates
 updatePreview('station', 'preview-station');
 updatePreview('consentDate', 'preview-consentDate');
+updatePreview('procurementPreference', 'preview-procurementPreference'); // For saving/loading
 updatePreview('doctor1Name', 'preview-doctor1Name');
 updatePreview('doctor1Rank', 'preview-doctor1Rank');
 updatePreview('doctor2Name', 'preview-doctor2Name');
 updatePreview('doctor2Rank', 'preview-doctor2Rank');
+updatePreview('prevIssueDate', 'serving-cert-prev-date');
+updatePreview('prevModelName', 'serving-cert-prev-model');
+
+
 
 // Update sex in age field
 document.getElementById('sex').addEventListener('change', function() {
@@ -102,41 +117,111 @@ document.getElementById('age').addEventListener('input', function() {
     }
 });
 
+// ===== DYNAMIC IDENTIFICATION FIELDS (ECHS Card No / Service Number) =====
+let currentIdType = 'ECHS Card No'; // Default
+
+function updateIdentificationFields() {
+    const serviceTypeSelect = document.getElementById('serviceType');
+    currentIdType = serviceTypeSelect.value === 'Serving' ? 'Service Number' : 'ECHS Card No';
+
+    // Input field labels and placeholders
+    const echsCardNoLabel = document.getElementById('echsCardNoLabel');
+    const echsCardNoInput = document.getElementById('echsCardNo');
+    const relatedCardNoLabel = document.getElementById('relatedCardNoLabel');
+    const relatedCardNoInput = document.getElementById('relatedCardNo');
+    const relatedCardNoGroup = document.getElementById('relatedCardNoGroup');
+    const servingIssueOptions = document.getElementById('serving-issue-options');
+    const exServingCerts = document.getElementById('ex-serving-certs');
+    const servingCertContainer = document.getElementById('serving-cert-container');
+    const relatedPersonDetails = document.getElementById('preview-related-person-details');
+
+    if (echsCardNoLabel) echsCardNoLabel.textContent = currentIdType;
+    if (echsCardNoInput) echsCardNoInput.placeholder = currentIdType;
+    if (relatedCardNoLabel) relatedCardNoLabel.textContent = `Related Person ${currentIdType}`;
+    if (relatedCardNoInput) relatedCardNoInput.placeholder = currentIdType;
+
+    // Preview labels and values
+    const previewEchsCardNoLabel = document.getElementById('preview-echsCardNoLabel');
+    const previewEchsCardNo = document.getElementById('preview-echsCardNo');
+    const previewRelatedCardNoLabel = document.getElementById('preview-relatedCardNoLabel');
+    const previewRelatedCardNo = document.getElementById('preview-relatedCardNo');
+
+    // Toggle visibility of Rank input and certificate types
+    const isServing = serviceTypeSelect.value === 'Serving';
+    servingIssueOptions.style.display = isServing ? 'block' : 'none';
+    exServingCerts.style.display = isServing ? 'none' : 'block';
+    servingCertContainer.style.display = isServing ? 'block' : 'none';
+    relatedPersonDetails.style.display = document.getElementById('relation').value === 'Self' ? 'none' : 'flex';
+
+    // Hide related person's card number field if 'Serving'
+    if (isServing) {
+        relatedCardNoGroup.style.display = 'none';
+        relatedCardNoInput.value = '';
+    } else {
+        relatedCardNoGroup.style.display = 'block';
+    }
+
+    if (previewEchsCardNoLabel) previewEchsCardNoLabel.textContent = currentIdType;
+    if (previewEchsCardNo) {
+        previewEchsCardNo.innerHTML = echsCardNoInput.value ? echsCardNoInput.value : `<span class="placeholder">${currentIdType}</span>`;
+    }
+    if (previewRelatedCardNoLabel) previewRelatedCardNoLabel.textContent = `${currentIdType} -`;
+    if (previewRelatedCardNo) {
+        previewRelatedCardNo.innerHTML = relatedCardNoInput.value ? relatedCardNoInput.value : `<span class="placeholder">${currentIdType}</span>`;
+    }
+
+    // Trigger updates for consent/certificates that use the dynamic text
+    updateConsentStatement();
+    updateCertificates();
+    updateServingCertificate();
+}
+
+// Event listeners for dynamic ID fields
+document.getElementById('serviceType').addEventListener('change', updateIdentificationFields);
+document.getElementById('echsCardNo').addEventListener('input', updateIdentificationFields);
+document.getElementById('relatedCardNo').addEventListener('input', updateIdentificationFields);
+
+// Initial call
+updateIdentificationFields();
+
+// Remove generic updatePreview calls for these fields as they are handled by updateIdentificationFields
+// updatePreview('echsCardNo', 'preview-echsCardNo');
+// updatePreview('relatedCardNo', 'preview-relatedCardNo');
+
 // Update consent statement dynamically
 function updateConsentStatement() {
+    const preference = document.getElementById('procurementPreference').value;
+    const statementEl = document.getElementById('preview-consentStatement');
+
     const name = document.getElementById('patientName').value || 'Patient Name';
     const cardNo = document.getElementById('echsCardNo').value || 'Card No';
     const relation = document.getElementById('relation').value || 'relation';
     const relatedName = document.getElementById('relatedName').value || 'Related Person';
     const relatedCard = document.getElementById('relatedCardNo').value || 'Card No';
-    const warrantyNum = document.getElementById('warranty').value;
-    const warrantyWordsForConsent = numberToWords(warrantyNum).replace(' only', '') || 'Yrs';
-    
     const isSelf = relation === 'Self';
 
-    document.getElementById('preview-consent-name').textContent = name;
-    document.getElementById('preview-consent-card').textContent = cardNo;
-    document.getElementById('preview-consent-warranty').textContent = warrantyWordsForConsent;
-
-    const consentRelation = document.getElementById('preview-consent-relation');
-    const consentRelated = document.getElementById('preview-consent-related');
-    const consentRelatedCard = document.getElementById('preview-consent-relatedCard');
-
-    if (isSelf) {
-        consentRelation.textContent = '';
-        consentRelated.textContent = '';
-        consentRelatedCard.textContent = '';
-    } else {
+    let relationText = '';
+    if (!isSelf) {
         const relationPrefix = relation === 'Spouse' ? 'w/o' : 
                               relation === 'Father' ? 's/o' :
                               relation === 'Mother' ? 'd/o' : 'c/o';
-        consentRelation.textContent = relationPrefix;
-        consentRelated.textContent = relatedName;
-        consentRelatedCard.textContent = ` ECHS Card No ${relatedCard}`;
+        relationText = ` ${relationPrefix} <strong>${relatedName}</strong> ${currentIdType} <strong>${relatedCard}</strong>`;
     }
+
+    let statement = '';
+    if (preference === 'willing') {
+        const warrantyNum = document.getElementById('warranty').value;
+        const warrantyWordsForConsent = numberToWords(warrantyNum).replace(' only', '') || 'Yrs';
+
+        statement = `"I, <strong>${name}</strong> (${currentIdType} <strong>${cardNo}</strong>${relationText}), hereby acknowledge that I have been provided with hearing aid trial and have selected the hearing aid based on my selection preference. I understand the terms of purchase, warranty (<strong>${warrantyWordsForConsent}</strong> years), annual retuning schedule and home care as explained by the supplier."`;
+    } else {
+        // Unwilling
+        statement = `“I, <strong>${name}</strong> (${currentIdType} <strong>${cardNo}</strong>)${relationText}, hereby affirm that I have been provided with hearing aid trial and have selected the hearing aid based on my requirements, but I am unwilling to buy hearing aids on my own and not willing to choose for reimbursement later. You are therefore requested to procure it from your end as per ECHS procurement guidelines and issue me the same from the polyclinic.”`;
+    }
+    statementEl.innerHTML = statement;
 }
 
-['patientName', 'echsCardNo', 'relation', 'relatedName', 'relatedCardNo', 'warranty'].forEach(id => {
+['patientName', 'echsCardNo', 'relation', 'relatedName', 'relatedCardNo', 'warranty', 'procurementPreference'].forEach(id => {
     const element = document.getElementById(id);
     if (element) {
         element.addEventListener('input', updateConsentStatement);
@@ -144,6 +229,86 @@ function updateConsentStatement() {
     }
 });
 updateConsentStatement(); // Initial call
+
+// Update Part 6 Certificates
+function updateCertificates() {
+    const name = document.getElementById('patientName').value || 'Patient Name';
+    const cardNo = document.getElementById('echsCardNo').value || 'Card No';
+    const relation = document.getElementById('relation').value;
+    const relatedName = document.getElementById('relatedName').value || 'Related Person';
+    const relatedCard = document.getElementById('relatedCardNo').value || 'Card No';
+    const isSelf = relation === 'Self';
+
+    let relationText = '';
+    if (!isSelf) {
+        const relationPrefix = relation === 'Spouse' ? 'w/o' : 
+                              relation === 'Father' ? 's/o' :
+                              relation === 'Mother' ? 'd/o' : 'c/o';
+        relationText = `${relation} ${relatedName} ${currentIdType} ${relatedCard}`;
+    } else {
+        relationText = `self ${name} ${currentIdType} ${cardNo}`;
+    }
+
+    // Certificate 1
+    document.getElementById('cert-patientName').textContent = name;
+    document.getElementById('cert-echsCardNo').textContent = `${currentIdType} ${cardNo}`;
+    document.getElementById('cert-relationInfo').textContent = relationText;
+
+    // Certificate 2
+    document.getElementById('cert2-patientName').textContent = name;
+    document.getElementById('cert2-echsCardNo').textContent = `${currentIdType} ${cardNo}`;
+    document.getElementById('cert2-relationInfo').textContent = relationText;
+}
+
+['patientName', 'echsCardNo', 'relation', 'relatedName', 'relatedCardNo'].forEach(id => document.getElementById(id).addEventListener('input', updateCertificates));
+updateCertificates(); // Initial call
+
+// Update Serving Certificate (Part 6)
+function updateServingCertificate() {
+    const name = document.getElementById('patientName').value || 'Patient Name';
+    const rank = document.getElementById('rank').value || 'Rank';
+    const serviceNo = document.getElementById('echsCardNo').value || 'Service No';
+    const relation = document.getElementById('relation').value;
+    const depName = (relation === 'Self') ? name : (document.getElementById('relatedName').value || 'Dependent Name');
+    const depAge = document.getElementById('age').value || 'Age';
+    const earAffected = document.getElementById('earAffected').value;
+
+    const relationMap = {
+        'Self': 'Self', 'Spouse': 'Wife', 'Father': 'Father', 
+        'Mother': 'Mother', 'Child': 'Son/Daughter'
+    };
+    const relationText = relationMap[relation] || 'Dependent';
+
+    // Populate fields for both certs
+    ['', '2'].forEach(suffix => {
+        document.getElementById(`serving-cert-id${suffix}`).textContent = serviceNo;
+        document.getElementById(`serving-cert-rank${suffix}`).textContent = rank;
+        document.getElementById(`serving-cert-name${suffix}`).textContent = name;
+        document.getElementById(`serving-cert-relation${suffix}`).textContent = relationText;
+        document.getElementById(`serving-cert-dep-name${suffix}`).textContent = depName;
+        document.getElementById(`serving-cert-dep-age${suffix}`).textContent = depAge;
+    });
+    document.getElementById('serving-cert-ear').textContent = earAffected;
+
+    // Toggle visibility of First Time vs Subsequent Issue sections
+    const issueType = document.getElementById('issueType').value;
+    document.getElementById('first-time-issue-cert').style.display = (issueType === 'First Time') ? 'block' : 'none';
+    document.getElementById('subsequent-issue-cert').style.display = (issueType === 'Subsequent') ? 'block' : 'none';
+    document.getElementById('subsequent-issue-details').style.display = (issueType === 'Subsequent') ? 'block' : 'none';
+}
+
+['age', 'earAffected', 'issueType', 'prevIssueDate', 'prevModelName'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+        el.addEventListener('input', updateServingCertificate);
+        el.addEventListener('change', updateServingCertificate);
+    }
+});
+updateServingCertificate(); // Initial call
+updatePreview('rank', 'preview-rank');
+updatePreview('rank', 'serving-cert-rank'); // For serving cert
+updatePreview('rank', 'serving-cert-rank2'); // For serving cert
+
 
 // Disable related person fields if relation is 'Self'
 const relationSelect = document.getElementById('relation');
@@ -155,7 +320,7 @@ function handleRelationChange() {
     const isSelf = relationSelect.value === 'Self';
     relatedNameInput.disabled = isSelf;
     relatedCardNoInput.disabled = isSelf;
-    relatedPersonRow.style.display = isSelf ? 'none' : '';
+    relatedPersonRow.style.display = isSelf ? 'none' : 'table-row';
 
     if (isSelf) {
         relatedNameInput.value = '';
@@ -163,6 +328,7 @@ function handleRelationChange() {
         // Manually trigger input events to update preview and save state
         relatedNameInput.dispatchEvent(new Event('input'));
         relatedCardNoInput.dispatchEvent(new Event('input'));
+        updateIdentificationFields(); // To hide the row in preview
     }
 }
 
@@ -203,23 +369,23 @@ function collectAudiogramData() {
 
 // Calculate average and diagnosis
 function calculateDiagnosis() {
+    const frequenciesForAverage = ['500', '1000', '2000', '4000'];
+
+    const getAverage = (data) => {
+        const values = frequenciesForAverage
+            .map(freq => data[freq])
+            .filter(v => v !== null && v !== undefined);
+        
+        return values.length > 0 ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : 0;
+    };
+
     // Calculate averages for right ear
-    const rightAcValues = Object.values(audiogramData.right.ac).filter(v => v !== null);
-    const rightBcValues = Object.values(audiogramData.right.bc).filter(v => v !== null);
-    
-    const rightAcAvg = rightAcValues.length > 0 ? 
-        Math.round(rightAcValues.reduce((a, b) => a + b, 0) / rightAcValues.length) : 0;
-    const rightBcAvg = rightBcValues.length > 0 ? 
-        Math.round(rightBcValues.reduce((a, b) => a + b, 0) / rightBcValues.length) : 0;
+    const rightAcAvg = getAverage(audiogramData.right.ac);
+    const rightBcAvg = getAverage(audiogramData.right.bc);
     
     // Calculate averages for left ear
-    const leftAcValues = Object.values(audiogramData.left.ac).filter(v => v !== null);
-    const leftBcValues = Object.values(audiogramData.left.bc).filter(v => v !== null);
-    
-    const leftAcAvg = leftAcValues.length > 0 ? 
-        Math.round(leftAcValues.reduce((a, b) => a + b, 0) / leftAcValues.length) : 0;
-    const leftBcAvg = leftBcValues.length > 0 ? 
-        Math.round(leftBcValues.reduce((a, b) => a + b, 0) / leftBcValues.length) : 0;
+    const leftAcAvg = getAverage(audiogramData.left.ac);
+    const leftBcAvg = getAverage(audiogramData.left.bc);
     
     // Update preview
     document.getElementById('preview-acRight').textContent = rightAcAvg;
@@ -665,7 +831,7 @@ document.getElementById('exportPDF').addEventListener('click', function() {
     const filename = `${safeCardNo}.pdf`;
     
     const opt = {
-        margin: [7, 0, 15, 0],
+        margin: [10, 0, 15, 0],
         filename: filename,
         image: { type: 'jpeg', quality: 1.0 },
         html2canvas: { 
@@ -683,6 +849,17 @@ document.getElementById('exportPDF').addEventListener('click', function() {
     html2pdf().set(opt).from(element).save();
 });
 
+// ===== CLEAR FORM =====
+document.getElementById('clearForm').addEventListener('click', function() {
+    const confirmed = confirm("Are you sure you want to clear all form data? This will remove all saved information and cannot be undone.");
+    if (confirmed) {
+        // Remove the saved state from local storage
+        localStorage.removeItem(formStateKey);
+        // Reload the page to reset the form to its initial state
+        location.reload();
+    }
+});
+
 // ===== LOCAL STORAGE - SAVE & LOAD =====
 const formStateKey = 'hearingReportFormData';
 
@@ -694,7 +871,11 @@ function saveFormState() {
     // Save all standard inputs, selects, and textareas
     document.querySelectorAll('.input-panel input, .input-panel select, .input-panel textarea').forEach(el => {
         if (el.id) {
-            state[el.id] = el.value;
+            if (el.type === 'checkbox') {
+                state[el.id] = el.checked;
+            } else {
+                state[el.id] = el.value;
+            }
         }
     });
 
@@ -729,7 +910,11 @@ function loadFormState() {
         if (key !== 'trials') {
             const el = document.getElementById(key);
             if (el) {
-                el.value = state[key];
+                if (el.type === 'checkbox') {
+                    el.checked = state[key];
+                } else {
+                    el.value = state[key];
+                }
             }
         }
     });
@@ -745,16 +930,13 @@ function loadFormState() {
     }
 
     // Trigger all update functions to refresh the preview
-    document.querySelectorAll('.input-panel input, .input-panel select, .input-panel textarea').forEach(el => {
-        if (el.id) {
-            el.dispatchEvent(new Event('input'));
-            el.dispatchEvent(new Event('change'));
-        }
-    });
     
     updateTrialsPreview();
     collectAudiogramData();
     updateConsentStatement();
+    updateCertificates();
+    updateServingCertificate();
+    updateIdentificationFields(); // Ensure dynamic fields are updated after loading
     updateDiscountPercentage();
 }
 

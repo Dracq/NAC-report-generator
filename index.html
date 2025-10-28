@@ -25,11 +25,25 @@
                 <button class="tab-btn" data-part="3">Part 3</button>
                 <button class="tab-btn" data-part="4">Part 4</button>
                 <button class="tab-btn" data-part="5">Part 5</button>
+                <button class="tab-btn" data-part="6">Part 6</button>
             </div>
 
             <!-- PART 1: Patient Information -->
             <div class="input-section active" id="part1-inputs">
                 <h3>Part 1: Patient Information</h3>
+                <div class="form-group">
+                    <label>Service Type</label>
+                    <select id="serviceType">
+                        <option value="Ex-Serving">Ex-Serving</option>
+                        <option value="Serving">Serving</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="rank-group">
+                    <label>Rank</label>
+                    <input type="text" id="rank" placeholder="Enter Rank">
+                </div>
+
                 <div class="form-group">
                     <label>Patient Name</label>
                     <input type="text" id="patientName" placeholder="Enter patient name">
@@ -49,7 +63,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>ECHS Card No</label>
+                    <label id="echsCardNoLabel">ECHS Card No/Service No</label>
                     <input type="text" id="echsCardNo" placeholder="Card Number">
                 </div>
                 <div class="form-group">
@@ -66,8 +80,8 @@
                     <label>Related Person Name</label>
                     <input type="text" id="relatedName" placeholder="Name">
                 </div>
-                <div class="form-group">
-                    <label>Related Person ECHS Card No</label>
+                <div class="form-group" id="relatedCardNoGroup">
+                    <label id="relatedCardNoLabel">Related Person ECHS Card No</label>
                     <input type="text" id="relatedCardNo" placeholder="Card Number">
                 </div>
                 <div class="form-group">
@@ -249,7 +263,7 @@
                 </div>
                 <div class="form-group">
                     <label>Recommendation Statement</label>
-                    <textarea id="recommendation" rows="3" placeholder="Recommendation text"></textarea>
+                    <textarea id="recommendation" rows="3" placeholder="Add details after '...approval by'"></textarea>
                 </div>
                 <div class="navigation-buttons">
                     <button type="button" class="btn-nav btn-back" data-target="3">&larr; Back</button>
@@ -260,6 +274,13 @@
             <!-- PART 5: Patient Consent -->
             <div class="input-section" id="part5-inputs">
                 <h3>Part 5: Patient Consent</h3>
+                <div class="form-group">
+                    <label>Procurement Preference</label>
+                    <select id="procurementPreference">
+                        <option value="unwilling">Unwilling to self-procure</option>
+                        <option value="willing">Willing to self-procure</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Station/Location</label>
                     <input type="text" id="station" placeholder="e.g., MH Jaipur">
@@ -286,6 +307,32 @@
                 </div>
                 <div class="navigation-buttons">
                     <button type="button" class="btn-nav btn-back" data-target="4">&larr; Back</button>
+                    <button type="button" class="btn-nav btn-next" data-target="6">Next &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PART 6: Certificates -->
+            <div class="input-section" id="part6-inputs">
+                <h3>Part 6: Certificates</h3>
+                <div id="serving-issue-options" style="display: none;">
+                    <h4>Serving Personnel Certificate Options</h4>
+                    <div class="form-group">
+                        <label>Issue Type</label>
+                        <select id="issueType">
+                            <option value="First Time">First Time Issue</option>
+                            <option value="Subsequent">Subsequent Issue</option>
+                        </select>
+                    </div>
+                    <div id="subsequent-issue-details" style="display: none;">
+                        <div class="form-group"><label>Date of Previous Issue</label><input type="date" id="prevIssueDate"></div>
+                        <div class="form-group"><label>Previous Model Name</label><input type="text" id="prevModelName" placeholder="Model Name"></div>
+                    </div>
+                </div>
+
+                <p>This section contains undertaking and domiciliary equipment certificates. The content is generated automatically.</p>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn-nav btn-back" data-target="5">&larr; Back</button>
+                    <button type="button" id="clearForm" class="btn-clear">Clear Form</button>
                     <button id="exportPDF" class="btn-export">Generate PDF</button>
                 </div>
             </div>
@@ -305,26 +352,30 @@
                     <div class="section-title">PART 1 - PATIENT INFORMATION</div>
                     <table class="info-table">
                         <tr>
-                            <td class="label">Patient Name</td>
-                            <td class="value" id="preview-patientName"><span class="placeholder">Patient Name</span></td>
-                            <td class="label">Age</td>
-                            <td class="value" id="preview-age"><span class="placeholder">Age</span> Yrs / <span id="preview-sex">Sex</span></td>
-                        </tr>
-                        <tr>
-                            <td class="label">ECHS Card No</td>
-                            <td class="value" id="preview-echsCardNo"><span class="placeholder">ECHS Card No</span></td>
-                            <td class="label">Relation</td>
-                            <td class="value" id="preview-relation"><span class="placeholder">Relation</span></td>
-                        </tr>
-                        <tr id="related-person-row">
-                            <td class="label">Name</td>
+                            <td class="label">Rank & Name</td>
                             <td class="value" colspan="3">
-                                <span id="preview-relatedName"><span class="placeholder">Related Person Name</span></span> 
-                                ECHS Card No - <span id="preview-relatedCardNo"><span class="placeholder">Related Card No</span></span>
+                                <span id="preview-rank"><span class="placeholder">Rank</span></span> <span id="preview-patientName"><span class="placeholder">Patient Name</span></span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="label">ECHS Polyclinic</td>
+                            <td class="label">ECHS Card No/Service No</td>
+                            <td class="value" id="preview-echsCardNo"><span class="placeholder">ECHS Card No/Service No</span></td>
+                            <td class="label">Relation</td>
+                            <td class="value" id="preview-relation"><span class="placeholder">Relation</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Age & Sex</td>
+                            <td class="value" colspan="3" id="preview-age"><span class="placeholder">Age</span> Yrs / <span id="preview-sex">Sex</span></td>
+                        </tr>
+                        <tr id="related-person-row">
+                            <td class="label">Name</td>
+                            <td class="value" colspan="3" id="preview-related-person-details">
+                                <span id="preview-relatedName"><span class="placeholder">Related Person Name</span></span>
+                                <span id="preview-relatedCardNoLabel">ECHS Card No/Service No</span> - <span id="preview-relatedCardNo"><span class="placeholder">Related Card No</span></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">ECHS Polyclinic/Unit</td>
                             <td class="value" id="preview-echsPolyclinic"><span class="placeholder">Polyclinic</span></td>
                             <td class="label">Contact No</td>
                             <td class="value" id="preview-contactNo"><span class="placeholder">Contact No</span></td>
@@ -442,17 +493,7 @@
                 <div class="report-section">
                     <div class="section-title">PART 5 - PATIENT CONSENT</div>
                     <div class="consent-text">
-                        <p id="preview-consentStatement">
-                            "I, <strong><span id="preview-consent-name">Patient Name</span></strong> 
-                            (ECHS Card No <span id="preview-consent-card">Card No</span> 
-                            <span id="preview-consent-relation">r/o</span> 
-                            <span id="preview-consent-related">Related Person</span> 
-                            ECHS Card No <span id="preview-consent-relatedCard">Card No</span>), 
-                            hereby acknowledge that I have been provided with hearing aid trial and have selected 
-                            the hearing aid based on my selection preference. I understand the terms of purchase, 
-                            warranty (<span id="preview-consent-warranty">Yrs</span> years), annual retuning schedule 
-                            and home care as explained by the supplier."
-                        </p>
+                        <p id="preview-consentStatement"><!-- This will be populated by script.js --></p>
                     </div>
                     
                     <div class="signature-section">
@@ -460,7 +501,6 @@
                             <p>Patient Signature: _______________________</p>
                         </div>
                     </div>
-
                     <div class="doctor-section">
                         <div class="station-info">
                             <p>Station: <span id="preview-station"><span class="placeholder">Station</span></span></p>
@@ -475,6 +515,76 @@
                             <div class="doctor-sign">
                                 <p>(<span id="preview-doctor2Name"><span class="placeholder">Doctor 2 Name</span></span>)</p>
                                 <p><span id="preview-doctor2Rank"><span class="placeholder">Rank & Designation</span></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PART 6: Certificates -->
+                <div id="part6-preview" class="report-section page-break-before">
+                    <!-- For Ex-Serving -->
+                    <div id="ex-serving-certs">
+                        <div class="certificate-section">
+                            <h4 class="certificate-title">UNDERTAKING CERTIFICATE FOR ACCEPTANCE OF ECHS CEILING RATE FOR REIMBURSEMENT OF DOMICILIARY EQUIPMENT</h4>
+                            <p class="certificate-body">
+                                I, <span id="cert-patientName" class="cert-value">Patient Name</span>
+                                ECHS Card No/Serive No <span id="cert-echsCardNo" class="cert-value">Card No</span>
+                                <span id="cert-relationInfo" class="cert-value"></span>
+                                hereby agree to accept the ECHS ceiling rate for the Reimbursement claim of Behind the ear hearing aid.
+                            </p>
+                            <div class="certificate-signature">
+                                <p>Date: ____________</p>
+                                <p>Signature of Patient______________________</p>
+                            </div>
+                        </div>
+
+                        <div class="certificate-section">
+                            <h4 class="certificate-title">CERTIFICATE FOR DOMICILIARY EQUIPMENT</h4>
+                            <p class="certificate-body">
+                                It is certified that hearing Aid has not been issued to Mr/Mrs <span id="cert2-patientName" class="cert-value">Patient Name</span>
+                                ECHS Card No <span id="cert2-echsCardNo" class="cert-value">Card No</span>
+                                <span id="cert2-relationInfo" class="cert-value"></span>
+                                in the last five years.
+                            </p>
+                            <div class="certificate-signature">
+                                <p>Date: ____________</p>
+                                <p>(Signature of OIC ECHS Polyclinic)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For Serving -->
+                    <div id="serving-cert-container" class="hidden">
+                        <div class="certificate-section">
+                            <h4 class="certificate-title">CERTIFICATE<br>FIRST TIME ISSUE/ SUBSEQUENT ISSUE OF HEARING AID</h4>
+                            <p class="certificate-note">(To be furnished by the Officer/JCO/OR receiving free hearing aid for self/dependent’s)</p>
+                            
+                            <div id="first-time-issue-cert">
+                                <p class="certificate-subtitle"><u>First Time Issue:</u></p>
+                                <p class="certificate-body">1. I (<span id="serving-cert-id" class="cert-value"></span>) (<span id="serving-cert-rank" class="cert-value"></span>) (<span id="serving-cert-name" class="cert-value"></span>) hereby certified that I have not been issued with any hearing aid/s for my <span id="serving-cert-relation" class="cert-value"></span> named (<span id="serving-cert-dep-name" class="cert-value"></span>) Age (<span id="serving-cert-dep-age" class="cert-value"></span>) years Prior to the present issue of hearing aid/s.</p>
+                            </div>
+
+                            <div id="subsequent-issue-cert">
+                                <p class="certificate-subtitle"><u>Subsequent Issue:</u></p>
+                                <p class="certificate-body">1. I (<span id="serving-cert-id2" class="cert-value"></span>) (<span id="serving-cert-rank2" class="cert-value"></span>) (<span id="serving-cert-name2" class="cert-value"></span>) hereby certified that I have been issued with below mentioned hearing aid/s for my <span id="serving-cert-relation2" class="cert-value"></span> named (<span id="serving-cert-dep-name2" class="cert-value"></span>) Age (<span id="serving-cert-dep-age2" class="cert-value"></span>) years as per below mentioned details:</p>
+                                <ul class="certificate-list">
+                                    <li>a. Date of Issue: <span id="serving-cert-prev-date" class="cert-value"></span></li>
+                                    <li>b. Model Name: <span id="serving-cert-prev-model" class="cert-value"></span></li>
+                                    <li>c. Qty: (<span id="serving-cert-ear" class="cert-value"></span>) ears</li>
+                                </ul>
+                            </div>
+
+                            <p class="certificate-body">I hereby undertake to refund the entire cost of the hearing aid/s in one lump sum amount, should there be any information/evidence contrary to what has been furnished in para 1 above (First Time Issue) comes to light at a later date.</p>
+
+                            <div class="certificate-signature-block">
+                                <div class="signature-item"><p>Place:</p><p>Date:</p></div>
+                                <div class="signature-item"><p>Signature of individual</p></div>
+                            </div>
+                            <div class="countersign-block">
+                                <p><u>COUNTERSIGNED BY COMDT/CO/OC</u></p>
+                                <div class="certificate-signature-block">
+                                    <div class="signature-item"><p>Place:</p><p>Date:</p></div>
+                                </div>
                             </div>
                         </div>
                     </div>

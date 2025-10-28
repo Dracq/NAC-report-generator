@@ -109,6 +109,16 @@ body {
     color: #555;
 }
 
+.form-group-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -118,6 +128,11 @@ body {
     border-radius: 4px;
     font-size: 13px;
     font-family: 'Segoe UI', sans-serif;
+}
+
+.form-group-inline input[type="checkbox"] {
+    width: auto;
+    height: 18px;
 }
 
 .form-group input:focus,
@@ -217,6 +232,21 @@ body {
     background-color: #2980b9;
 }
 
+.btn-clear {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #e74c3c; /* Red color */
+    color: white;
+    margin-right: 10px;
+}
+
+.btn-clear:hover {
+    background-color: #c0392b;
+}
 
 /* Buttons */
 .btn-add {
@@ -463,6 +493,76 @@ body {
     .page-break-before {
         page-break-before: always;
     }
+}
+
+
+/* Certificate Section Styles */
+.certificate-section {
+    margin-bottom: 40px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.certificate-section:last-child {
+    margin-bottom: 20px;
+}
+
+.certificate-title {
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.certificate-note {
+    text-align: center;
+    font-style: italic;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.certificate-subtitle {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+
+.certificate-body {
+    text-align: justify;
+    margin-bottom: 30px;
+}
+
+.certificate-body .cert-value {
+    font-weight: bold;
+}
+
+.certificate-list {
+    list-style-type: none;
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.certificate-signature {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.certificate-signature-block {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+}
+
+.signature-item {
+    text-align: right;
+}
+
+.countersign-block {
+    margin-top: 80px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
 }
 
 /* Scrollbar Styling */
